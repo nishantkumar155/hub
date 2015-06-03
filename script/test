@@ -42,7 +42,7 @@ if [ -n "$CI" ] && [ -n "$GITHUB_OAUTH" ]; then
     ' "$@"
   }
   upload_url="$(gh_release "v2.2.2-rc0" | sed 's/{.*}//')"
-  gh_api -i "${url}?name=hub-darwin&label=hub%20for%20OSX" -H 'Content-Type: application/octet-stream' -X POST --data-binary @hub-darwin
+  gh_api -i "${upload_url}?name=hub-darwin&label=hub%20for%20OSX" -H 'Content-Type: application/octet-stream' -X POST --data-binary @hub-darwin
 fi
 
 exit "$STATUS"
