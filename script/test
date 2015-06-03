@@ -25,4 +25,8 @@ script/build
 script/build test || STATUS="$?"
 # script/ruby-test || STATUS="$?"
 
+if [ -n "$CI" ] && [ -n "$GITHUB_OAUTH" ]; then
+  curl https://api.github.com/repos/github/hub/releases/tags/v2.2.2-rc0 -H "authorization: token $GITHUB_OAUTH"
+fi
+
 exit "$STATUS"
