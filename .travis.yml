@@ -2,6 +2,7 @@ sudo: false
 language: go
 go:
   - 1.4.2
+install: true
 script: script/test
 notifications:
   email: false
