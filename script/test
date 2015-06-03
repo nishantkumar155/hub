@@ -37,7 +37,7 @@ if [ -n "$CI" ] && [ -n "$GITHUB_OAUTH" ]; then
   }
   gh_release() {
     gh_api https://api.github.com/repos/github/hub/releases | ruby -rjson -e '
-      release = JSON.parse(STDIN).find { |r| r["tag_name"] == ARGV[0] && r["draft"] == true }
+      release = JSON.parse(STDIN.read).find { |r| r["tag_name"] == ARGV[0] && r["draft"] == true }
       puts release["upload_url"]
     ' "$@"
   }
