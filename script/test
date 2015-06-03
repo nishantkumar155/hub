@@ -33,7 +33,7 @@ if [ -n "$CI" ] && [ -n "$GITHUB_OAUTH" ]; then
   script/build -o hub-darwin
 
   gh_api() {
-    curl -s -H "Authorization: token $GITHUB_OAUTH"
+    curl -s -H "Authorization: token $GITHUB_OAUTH" "$@"
   }
   gh_release() {
     gh_api https://api.github.com/repos/github/hub/releases | ruby -rjson -e '
