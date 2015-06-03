@@ -26,7 +26,23 @@ script/build test || STATUS="$?"
 # script/ruby-test || STATUS="$?"
 
 if [ -n "$CI" ] && [ -n "$GITHUB_OAUTH" ]; then
-  curl https://api.github.com/repos/github/hub/releases -H "authorization: token $GITHUB_OAUTH"
+  # GIMME_OS=windows GIMME_ARCH=amd64
+  export GIMME_OS=darwin
+  export GIMME_ARCH=amd64
+  eval "$(gimme 1.4.2)"
+  script/build -o hub-darwin
+
+  gh_api() {
+    curl -s -H "Authorization: token $GITHUB_OAUTH"
+  }
+  gh_release() {
+    gh_api https://api.github.com/repos/github/hub/releases | ruby -rjson -e '
+      release = JSON.parse(STDIN).find { |r| r["tag_name"] == ARGV[0] && r["draft"] == true }
+      puts release["upload_url"]
+    ' "$@"
+  }
+  upload_url="$(gh_release "v2.2.2-rc0" | sed 's/{.*}//')"
+  gh_api -i "${url}?name=hub-darwin&label=hub%20for%20OSX" -H 'Content-Type: application/octet-stream' -X POST --data-binary @hub-darwin
 fi
 
 exit "$STATUS"
